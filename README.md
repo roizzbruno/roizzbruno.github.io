@@ -1,2 +1,2 @@
-# sir-baudelaire-code
+# Descrição
 Este repositório serve para reunir, organizar e documentar toda a discografia de Tyler, The Creator, incluindo seus álbuns oficiais de estúdio desde Bastard (2009) até DON’T TAP THE GLASS (2025). Aqui você encontrará um panorama completo contendo datas de lançamento, estilos musicais, contextos artísticos e faixas de destaque de cada projeto. O objetivo é oferecer uma visão clara da evolução sonora e criativa do artista ao longo dos anos, destacando suas fases, transições e contribuições para o hip-hop e música contemporânea.
