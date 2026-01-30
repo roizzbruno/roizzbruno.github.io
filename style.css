@@ -1,16 +1,16 @@
 body {
     font-family: Arial, sans-serif;
-    margin: 20px;
-    background: #a3b996; 
+    background: #a3b996;
+    max-width: 1000px;
+    margin: 20px auto;
+    position: relative;
 }
-
 h1 {
     text-align: center;
     margin-bottom: 30px;
     color: #ffffff; 
     
 }
-
 section {
     background: #effcf2; 
     padding: 20px;
@@ -18,28 +18,47 @@ section {
     border-radius: 10px;
     border: 2px solid #7A9E82;
     color: #5F8F6F;
-}
 
+}
 label {
     display: block;
     margin-top: 10px;
     color: #2E4F3D; 
     font-weight: bold;
 }
-
 input {
-    width: 100%;
-    padding: 8px;
+    width: 75%;
+    padding: 10px;
     margin-top: 3px;
     border-radius: 6px;
     border: 2px solid #5F8F6F;
     background: #FFFFFF;
 }
-
+#form1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 400px;
+    justify-content: center;
+}
+#form1 form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#form1 label {
+    width: 75%;
+    text-align: left;
+}
+#form1 .form-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
 .form-buttons {
     margin-top: 15px;
 }
-
 button {
     padding: 10px 16px;
     margin-right: 10px;
@@ -50,11 +69,9 @@ button {
     border-radius: 8px;
     font-weight: bold;
 }
-
 button:hover {
     background: #5F8F6F; 
 }
-
 table {
     width: 100%;
     border-collapse: collapse;
@@ -63,15 +80,20 @@ table {
     background: #ffffff;
     border: 2px solid #7A9E82;
 }
-
 th, td {
     border: 1px solid #7A9E82;
     padding: 8px;
     color: #2E4F3D;
 }
-
 th {
     background: #7A9E82;
     color: #FAF8F0;
     font-weight: bold;
+}
+section:not(#form1) {
+    text-align: center;
+}
+
+section:not(#form1) table {
+    text-align: left;
 }

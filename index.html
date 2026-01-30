@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <title>Discografia - Tyler, The Creator</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="le fleur.png">
+    <link rel="shortcut icon" href="imgs/le fleur.png">
 </head>
 <body>
     <h1>Gerenciador de Discografia - Tyler, The Creator</h1>
-    <section id="form-section">
+    <section id="form1">
         <h2>Cadastro / Edição de Álbum</h2>
-        <form id="albumForm">
+        <form id="cadastro">
             <label>Título do Álbum:</label>
             <input type="text" id="titulo" required>
             <label>Ano de Lançamento:</label>
@@ -27,11 +27,11 @@
             </div>
         </form>
     </section>
-    <section id="list-section">
+    <section>
         <h2>Lista de Álbuns</h2>
-        <input type="file" id="arquivoInput">
-        <button id="importarBtn">Importar</button>
-        <button id="exportarBtn">Exportar</button>
+        <input type="file" id="arquivoInput" accept=".csv">
+        <button id="importar">Importar</button>
+        <button id="exportar">Exportar</button>
         <table id="tabelaAlbuns" border="1">
             <thead>
                 <tr>
@@ -42,16 +42,88 @@
                     <th>Gênero / Estilo</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
+            <tbody id="corpoTabela">
             </tbody>
         </table>
-    </section>    
+    </section>  
+    <script>
+        const tbody = document.getElementById("corpoTabela")
+        const cad = document.getElementById("cadastro")
+        cad.addEventListener("submit", function(evento) {
+        evento.preventDefault()
+        const titulo = document.getElementById("titulo").value
+        const ano = document.getElementById("ano").value
+        const fx = document.getElementById("faixas").value
+        const dur = document.getElementById("duracao").value
+        const gen = document.getElementById("genero").value
+        
+        const tr = document.createElement("tr")
+        const tdTitulo = document.createElement("td")
+        tdTitulo.textContent = titulo
+        const tdAno = document.createElement("td")
+        tdAno.textContent = ano
+        const tdFx = document.createElement("td")
+        tdFx.textContent = fx
+        const tdDur = document.createElement("td")
+        tdDur.textContent = dur
+        const tdGen = document.createElement("td")
+        tdGen.textContent = gen
+        
+        tr.appendChild(tdTitulo)
+        tr.appendChild(tdAno)
+        tr.appendChild(tdFx)
+        tr.appendChild(tdDur)
+        tr.appendChild(tdGen)
+        tbody.appendChild(tr)
+
+        cad.reset()
+        })
+        const btnExportar = document.getElementById("exportar")
+        btnExportar.addEventListener("click", function () {
+            let csv = ""
+            const linhas = document.querySelectorAll("thead tr, tbody tr")
+            linhas.forEach(linha => {
+                const colunas = linha.querySelectorAll("th, td")
+                const dados = []
+                colunas.forEach(coluna => {
+                    dados.push(coluna.innerText)
+                })
+                csv += dados.join(",") + "\n"
+            })
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement("a")
+            a.href = url
+            a.download = "lista.csv"
+            a.click()
+        })
+        const inputCSV = document.getElementById("arquivoInput")
+        const btnImportar = document.getElementById("importar")
+        btnImportar.addEventListener("click", function () {
+            if (!inputCSV.files.length) {
+                alert("Selecione um arquivo CSV primeiro!")
+                return
+            }
+            const file = inputCSV.files[0]
+            const leitor = new FileReader()
+            leitor.onload = function () {
+            const text = leitor.result.trim()
+            const linhas = text.split(/\r?\n/)
+            const dados = linhas.length === 1
+                ? [linhas[0].split(",").slice(5)]
+                : linhas.slice(1).map(l => l.split(","))
+            dados.forEach(colunas => {
+            const tr = document.createElement("tr")
+            colunas.forEach(valor => {
+                const td = document.createElement("td")
+                td.textContent = valor.trim()
+                tr.appendChild(td)
+            })
+            tbody.appendChild(tr)
+        })
+    }
+    leitor.readAsText(file)
+})
+</script>
 </body>
 </html>
