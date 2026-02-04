@@ -1,129 +1,166 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Discografia - Tyler, The Creator</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="imgs/le fleur.png">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="imgs/le fleur.png" />
+  </head>
+  <body>
     <h1>Gerenciador de Discografia - Tyler, The Creator</h1>
     <section id="form1">
-        <h2>Cadastro / Edição de Álbum</h2>
-        <form id="cadastro">
-            <label>Título do Álbum:</label>
-            <input type="text" id="titulo" required>
-            <label>Ano de Lançamento:</label>
-            <input type="number" id="ano" required>
-            <label>Número de Faixas:</label>
-            <input type="number" id="faixas" required>
-            <label>Duração Total (ex: 53:21):</label>
-            <input type="text" id="duracao" required>
-            <label>Gênero / Estilo:</label>
-            <input type="text" id="genero" required>
-            <div class="form-buttons">
-                <button type="submit" id="salvarBtn">Salvar</button>
-                <button type="button" id="cancelarBtn">Cancelar</button>
-            </div>
-        </form>
+      <h2>Cadastro / Edição de Álbum</h2>
+      <form id="cadastro">
+        <label>Título do Álbum:</label>
+        <input type="text" id="titulo" required />
+        <label>Ano de Lançamento:</label>
+        <input type="number" id="ano" required />
+        <label>Número de Faixas:</label>
+        <input type="number" id="faixas" required />
+        <label>Duração Total (ex: 53:21):</label>
+        <input type="text" id="duracao" required />
+        <label>Gênero / Estilo:</label>
+        <input type="text" id="genero" required />
+        <div class="form-buttons">
+          <button type="submit" id="salvarBtn">Salvar</button>
+          <button type="button" id="cancelarBtn">Cancelar</button>
+        </div>
+      </form>
     </section>
     <section>
-        <h2>Lista de Álbuns</h2>
-        <input type="file" id="arquivoInput" accept=".csv">
-        <button id="importar">Importar</button>
-        <button id="exportar">Exportar</button>
-        <table id="tabelaAlbuns" border="1">
-            <thead>
-                <tr>
-                    <th>Título do Álbum</th>
-                    <th>Ano</th>
-                    <th>Número de Faixas</th>
-                    <th>Duração Total</th>
-                    <th>Gênero / Estilo</th>
-                </tr>
-            </thead>
-            <tbody id="corpoTabela">
-            </tbody>
-        </table>
-    </section>  
+      <h2>Lista de Álbuns</h2>
+      <input type="file" id="arquivoInput" accept=".csv" />
+      <button id="importar">Importar</button>
+      <button id="exportar">Exportar</button>
+      <table id="tabelaAlbuns" border="1">
+        <thead>
+          <tr>
+            <th>Título do Álbum</th>
+            <th>Ano</th>
+            <th>Número de Faixas</th>
+            <th>Duração Total</th>
+            <th>Gênero / Estilo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="corpoTabela"></tbody>
+      </table>
+    </section>
     <script>
-        const tbody = document.getElementById("corpoTabela")
-        const cad = document.getElementById("cadastro")
-        cad.addEventListener("submit", function(evento) {
-        evento.preventDefault()
-        const titulo = document.getElementById("titulo").value
-        const ano = document.getElementById("ano").value
-        const fx = document.getElementById("faixas").value
-        const dur = document.getElementById("duracao").value
-        const gen = document.getElementById("genero").value
-        
-        const tr = document.createElement("tr")
-        const tdTitulo = document.createElement("td")
-        tdTitulo.textContent = titulo
-        const tdAno = document.createElement("td")
-        tdAno.textContent = ano
-        const tdFx = document.createElement("td")
-        tdFx.textContent = fx
-        const tdDur = document.createElement("td")
-        tdDur.textContent = dur
-        const tdGen = document.createElement("td")
-        tdGen.textContent = gen
-        
-        tr.appendChild(tdTitulo)
-        tr.appendChild(tdAno)
-        tr.appendChild(tdFx)
-        tr.appendChild(tdDur)
-        tr.appendChild(tdGen)
-        tbody.appendChild(tr)
+      const tbody = document.getElementById("corpoTabela");
+      const cad = document.getElementById("cadastro");
+      let linhaEmEdicao = null;
 
-        cad.reset()
-        })
-        const btnExportar = document.getElementById("exportar")
-        btnExportar.addEventListener("click", function () {
-            let csv = ""
-            const linhas = document.querySelectorAll("thead tr, tbody tr")
-            linhas.forEach(linha => {
-                const colunas = linha.querySelectorAll("th, td")
-                const dados = []
-                colunas.forEach(coluna => {
-                    dados.push(coluna.innerText)
-                })
-                csv += dados.join(",") + "\n"
-            })
-            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement("a")
-            a.href = url
-            a.download = "lista.csv"
-            a.click()
-        })
-        const inputCSV = document.getElementById("arquivoInput")
-        const btnImportar = document.getElementById("importar")
-        btnImportar.addEventListener("click", function () {
-            if (!inputCSV.files.length) {
-                alert("Selecione um arquivo CSV primeiro!")
-                return
-            }
-            const file = inputCSV.files[0]
-            const leitor = new FileReader()
-            leitor.onload = function () {
-            const text = leitor.result.trim()
-            const linhas = text.split(/\r?\n/)
-            const dados = linhas.length === 1
-                ? [linhas[0].split(",").slice(5)]
-                : linhas.slice(1).map(l => l.split(","))
-            dados.forEach(colunas => {
-            const tr = document.createElement("tr")
-            colunas.forEach(valor => {
-                const td = document.createElement("td")
-                td.textContent = valor.trim()
-                tr.appendChild(td)
-            })
-            tbody.appendChild(tr)
-        })
-    }
-    leitor.readAsText(file)
-})
-</script>
-</body>
+      function criarLinha(titulo, ano, fx, dur, gen) {
+        const tr = document.createElement("tr");
+        const tdTitulo = document.createElement("td");
+        tdTitulo.textContent = titulo;
+        const tdAno = document.createElement("td");
+        tdAno.textContent = ano;
+        const tdFx = document.createElement("td");
+        tdFx.textContent = fx;
+        const tdDur = document.createElement("td");
+        tdDur.textContent = dur;
+        const tdGen = document.createElement("td");
+        tdGen.textContent = gen;
+        const tdAcoes = document.createElement("td");
+
+        const btnEditar = document.createElement("button");
+        btnEditar.textContent = "Editar";
+        btnEditar.addEventListener("click", function () {
+          document.getElementById("titulo").value = tdTitulo.textContent;
+          document.getElementById("ano").value = tdAno.textContent;
+          document.getElementById("faixas").value = tdFx.textContent;
+          document.getElementById("duracao").value = tdDur.textContent;
+          document.getElementById("genero").value = tdGen.textContent;
+          linhaEmEdicao = tr;
+        });
+        const btnExcluir = document.createElement("button");
+        btnExcluir.textContent = "Excluir";
+        btnExcluir.addEventListener("click", function () {
+          tr.remove();
+        });
+
+        tdAcoes.appendChild(btnEditar);
+        tdAcoes.appendChild(btnExcluir);
+
+        tr.appendChild(tdTitulo);
+        tr.appendChild(tdAno);
+        tr.appendChild(tdFx);
+        tr.appendChild(tdDur);
+        tr.appendChild(tdGen);
+        tr.appendChild(tdAcoes);
+
+        tbody.appendChild(tr);
+      }
+      const btnCancelar = document.getElementById("cancelarBtn");
+      btnCancelar.addEventListener("click", function () {
+        cad.reset();
+        linhaEmEdicao = null;
+      });
+
+      cad.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const titulo = document.getElementById("titulo").value;
+        const ano = document.getElementById("ano").value;
+        const fx = document.getElementById("faixas").value;
+        const dur = document.getElementById("duracao").value;
+        const gen = document.getElementById("genero").value;
+
+        if (linhaEmEdicao) {
+          linhaEmEdicao.children[0].textContent = titulo;
+          linhaEmEdicao.children[1].textContent = ano;
+          linhaEmEdicao.children[2].textContent = fx;
+          linhaEmEdicao.children[3].textContent = dur;
+          linhaEmEdicao.children[4].textContent = gen;
+
+          linhaEmEdicao = null;
+          cad.reset();
+          return;
+        }
+        criarLinha(titulo, ano, fx, dur, gen);
+        cad.reset();
+      });
+      const btnExport = document.getElementById("exportar")
+        btnExport.addEventListener("click", function () {
+          let csv = "";
+          const linhas = document.querySelectorAll("thead tr, tbody tr");
+          linhas.forEach((linha) => {
+            const colunas = linha.querySelectorAll("th, td");
+            const dados = [];
+            colunas.forEach((col, i) => {
+              if (i < 5) dados.push(col.innerText);
+            });
+            csv += dados.join(",") + "\n";
+          });
+
+          const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = "lista.csv";
+          a.click();
+        });
+      const btnImport = document.getElementById("importar")
+      btnImport.addEventListener("click", function () {
+          const inputCSV = document.getElementById("arquivoInput");
+          if (!inputCSV.files.length) {
+            alert("Selecione um arquivo CSV primeiro!");
+            return;
+          }
+          const file = inputCSV.files[0];
+          const leitor = new FileReader();
+          leitor.onload = function () {
+            const linhas = leitor.result.trim().split(/\r?\n/);
+            const dados = linhas.slice(1).map((l) => l.split(","));
+
+            dados.forEach((col) => {
+              criarLinha(col[0], col[1], col[2], col[3], col[4]);
+            });
+          };
+          leitor.readAsText(file);
+        });
+    </script>
+  </body>
 </html>
